@@ -17,25 +17,27 @@ export async function createFeedback(params: CreateFeedbackParams) {
       )
       .join("");
 
+    // SIMPLIFIED: Removed the structuredOutputs configuration
     const { object } = await generateObject({
-      model: google("gemini-2.0-flash-001", {
-        structuredOutputs: false,
-      }),
+      model: google("gemini-2.0-flash-001"), // No second argument
       schema: feedbackSchema,
       prompt: `
-        You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
+        You are an AI interviewer analyzing a mock interview for ANY job field. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
+        
         Transcript:
         ${formattedTranscript}
 
         Please score the candidate from 0 to 100 in the following areas. Do not add categories other than the ones provided:
         - **Communication Skills**: Clarity, articulation, structured responses.
-        - **Technical Knowledge**: Understanding of key concepts for the role.
-        - **Problem-Solving**: Ability to analyze problems and propose solutions.
-        - **Cultural & Role Fit**: Alignment with company values and job role.
-        - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
+        - **Role-Specific Knowledge**: Understanding of key concepts and requirements for the specific job role.
+        - **Problem-Solving**: Ability to analyze problems and propose relevant solutions.
+        - **Cultural & Role Fit**: Alignment with professional values and job role expectations.
+        - **Confidence & Clarity**: Confidence in responses, professional engagement, and message clarity.
+        
+        Provide constructive feedback that would help the candidate improve in real interviews for ANY job field.
         `,
       system:
-        "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
+        "You are a professional interviewer analyzing mock interviews for ALL job types. Your task is to evaluate candidates based on universal professional categories",
     });
 
     const feedback = {
@@ -66,6 +68,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
   }
 }
 
+// ... rest of the file remains exactly the same ...
 export async function getInterviewById(id: string): Promise<Interview | null> {
   const interview = await db.collection("interviews").doc(id).get();
 
@@ -95,18 +98,24 @@ export async function getLatestInterviews(
 ): Promise<Interview[] | null> {
   const { userId, limit = 20 } = params;
 
-  const interviews = await db
-    .collection("interviews")
-    .orderBy("createdAt", "desc")
-    .where("finalized", "==", true)
-    .where("userId", "!=", userId)
-    .limit(limit)
-    .get();
+  try {
+    const interviews = await db
+      .collection("interviews")
+      .orderBy("createdAt", "desc")
+      .where("finalized", "==", true)
+      // FIX: Use the correct field name from updated interface
+      .where("userId", "!=", userId)
+      .limit(limit)
+      .get();
 
-  return interviews.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Interview[];
+    return interviews.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Interview[];
+  } catch (error) {
+    console.error("Error fetching latest interviews:", error);
+    return null;
+  }
 }
 
 export async function getInterviewsByUserId(

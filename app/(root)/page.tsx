@@ -13,13 +13,25 @@ import {
 async function Home() {
   const user = await getCurrentUser();
 
+  // Added safety check for user existence
+  if (!user) {
+    return (
+      <div className="text-center">
+        <h2>Please sign in to access your interviews</h2>
+        <Button asChild className="btn-primary mt-4">
+          <Link href="/sign-in">Sign In</Link>
+        </Button>
+      </div>
+    );
+  }
+
   const [userInterviews, allInterview] = await Promise.all([
-    getInterviewsByUserId(user?.id!),
-    getLatestInterviews({ userId: user?.id! }),
+    getInterviewsByUserId(user.id),
+    getLatestInterviews({ userId: user.id }),
   ]);
 
-  const hasPastInterviews = userInterviews?.length! > 0;
-  const hasUpcomingInterviews = allInterview?.length! > 0;
+  const hasPastInterviews = userInterviews && userInterviews.length > 0;
+  const hasUpcomingInterviews = allInterview && allInterview.length > 0;
 
   return (
     <>
@@ -27,7 +39,7 @@ async function Home() {
         <div className="flex flex-col gap-6 max-w-lg">
           <h2>Get Interview-Ready with AI-Powered Practice & Feedback</h2>
           <p className="text-lg">
-            Practice real interview questions & get instant feedback
+            Practice real interview questions & get instant feedback for ANY job field
           </p>
 
           <Button asChild className="btn-primary max-sm:w-full">
@@ -49,41 +61,43 @@ async function Home() {
 
         <div className="interviews-section">
           {hasPastInterviews ? (
-            userInterviews?.map((interview) => (
+            userInterviews.map((interview) => (
               <InterviewCard
                 key={interview.id}
-                userId={user?.id}
+                userId={user.id}
                 interviewId={interview.id}
-                role={interview.role}
+                title={interview.title} // Changed from 'role' to 'title'
                 type={interview.type}
-                techstack={interview.techstack}
+                level={interview.level} // Added level
                 createdAt={interview.createdAt}
+                // Removed techstack
               />
             ))
           ) : (
-            <p>You haven&apos;t taken any interviews yet</p>
+            <p className="text-center w-full">You haven&apos;t taken any interviews yet</p>
           )}
         </div>
       </section>
 
       <section className="flex flex-col gap-6 mt-8">
-        <h2>Take Interviews</h2>
+        <h2>Available Interviews</h2>
 
         <div className="interviews-section">
           {hasUpcomingInterviews ? (
-            allInterview?.map((interview) => (
+            allInterview.map((interview) => (
               <InterviewCard
                 key={interview.id}
-                userId={user?.id}
+                userId={user.id}
                 interviewId={interview.id}
-                role={interview.role}
+                title={interview.title} // Changed from 'role' to 'title'
                 type={interview.type}
-                techstack={interview.techstack}
+                level={interview.level} // Added level
                 createdAt={interview.createdAt}
+                // Removed techstack
               />
             ))
           ) : (
-            <p>There are no interviews available</p>
+            <p className="text-center w-full">There are no interviews available</p>
           )}
         </div>
       </section>

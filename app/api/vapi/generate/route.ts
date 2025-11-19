@@ -1,26 +1,38 @@
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
+import { NextRequest } from "next/server";
 
 import { db } from "@/firebase/admin";
-import { getRandomInterviewCover } from "@/lib/utils";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 
-export async function POST(request: Request) {
-  const { title, description, level, amount, userid } = await request.json();
-
+export async function POST(request: NextRequest) {
   try {
+    // Get current user from auth
+    const user = await getCurrentUser();
+    if (!user) {
+      return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { title, description, level, amount } = await request.json();
+
     const { text: questions } = await generateText({
       model: google("gemini-2.0-flash-001"),
-      prompt: `Prepare questions for a job interview.
-        The job title is: ${title}.
-        The job description/posting information is: ${description}.
-        The job experience level is: ${level}.
-        The amount of questions required is: ${amount}.
-        Please return only the questions, without any additional text.
-        The questions are going to be read by a voice assistant so do not use "/" or "*" or any other special characters which might break the voice assistant.
-        Return the questions formatted like this:
-        ["Question 1", "Question 2", "Question 3"]
+      prompt: `Prepare professional interview questions for ANY job field.
+        Job Title: ${title}
+        Job Description: ${description}
+        Experience Level: ${level}
+        Number of Questions: ${amount}
         
-        Thank you! <3
+        IMPORTANT INSTRUCTIONS:
+        - Generate questions appropriate for the specific job title and level
+        - Include a mix of behavioral, situational, and role-specific questions
+        - Questions should be relevant to ANY industry or job field
+        - Return ONLY the questions as a JSON array, no additional text
+        - Format questions for voice assistant (no special characters like "/", "*" or any other special characters which might break the voice assistant.)
+        - Questions should be clear, professional, and interview-appropriate
+        
+        Required Format:
+        ["Question 1", "Question 2", "Question 3"]
     `,
     });
 
@@ -29,18 +41,21 @@ export async function POST(request: Request) {
       description: description,
       level: level,
       questions: JSON.parse(questions),
-      userId: userid,
+      userId: user.id, // Use authenticated user's ID
       finalized: true,
-      coverImage: getRandomInterviewCover(),
+      type: "Mixed",
       createdAt: new Date().toISOString(),
     };
 
+    // Add to Firestore
     await db.collection("interviews").add(interview);
 
-    return Response.json({ success: true }, { status: 200 });
+    return Response.json({ 
+      success: true
+    }, { status: 200 });
   } catch (error) {
     console.error("Error:", error);
-    return Response.json({ success: false, error: error }, { status: 500 });
+    return Response.json({ success: false, error: "Internal server error" }, { status: 500 });
   }
 }
 

@@ -5,26 +5,26 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-success-100: #49de50;
-  --color-success-200: #42c748;
-  --color-destructive-100: #f75353;
-  --color-destructive-200: #c44141;
+  --color-success-100: #10b981; /* Professional green */
+  --color-success-200: #059669; /* Darker green */
+  --color-warning-100: #f59e0b; /* Yellow accent */
+  --color-warning-200: #d97706; /* Darker yellow */
+  --color-destructive-100: #ef4444;
+  --color-destructive-200: #dc2626;
 
-  --color-primary-100: #dddfff;
-  --color-primary-200: #cac5fe;
+  --color-primary-100: #10b981; /* Green as primary */
+  --color-primary-200: #059669;
 
-  --color-light-100: #d6e0ff;
-  --color-light-400: #6870a6;
-  --color-light-600: #4f557d;
-  --color-light-800: #24273a;
+  --color-light-100: #f8fafc;
+  --color-light-400: #64748b;
+  --color-light-600: #475569;
+  --color-light-800: #1e293b;
 
   --color-dark-100: #020408;
-  --color-dark-200: #27282f;
-  --color-dark-300: #242633;
+  --color-dark-200: #0f172a; /* Dark blue-gray */
+  --color-dark-300: #1e293b;
 
-  --font-mona-sans: "Mona Sans", sans-serif;
-
-  --bg-pattern: url("/pattern.png");
+  --font-georgia: Georgia, "Times New Roman", Times, serif;
 }
 
 :root {
@@ -139,28 +139,31 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-georgia font-bold; /* Georgia font with bold weight */
   }
   p {
-    @apply text-light-100;
+    @apply text-light-100 font-bold; /* Bold text */
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold text-center; /* Bold and centered headings */
   }
   h2 {
-    @apply text-3xl font-semibold;
+    @apply text-3xl font-bold; /* Bold weight */
   }
   h3 {
-    @apply text-2xl font-semibold;
+    @apply text-2xl font-bold; /* Bold weight */
   }
   ul {
     @apply list-disc list-inside;
   }
   li {
-    @apply text-light-100;
+    @apply text-light-100 font-bold; /* Bold text */
   }
 }
 
 @layer components {
   .btn-call {
-    @apply inline-block px-7 py-3 font-bold text-sm leading-5 text-white transition-colors duration-150 bg-success-100 border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-success-200 hover:bg-success-200 min-w-28 cursor-pointer items-center justify-center overflow-visible;
+    @apply inline-block px-7 py-3 font-bold text-sm leading-5 text-white transition-colors duration-150 bg-success-100 border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-success-200 hover:bg-success-200 min-w-28 cursor-pointer items-center justify-center overflow-visible text-center;
 
     .span {
       @apply bg-success-100 h-[85%] w-[65%];
@@ -168,21 +171,27 @@
   }
 
   .btn-disconnect {
-    @apply inline-block px-7 py-3 text-sm font-bold leading-5 text-white transition-colors duration-150 bg-destructive-100 border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-destructive-200 hover:bg-destructive-200 min-w-28;
+    @apply inline-block px-7 py-3 text-sm font-bold leading-5 text-white transition-colors duration-150 bg-destructive-100 border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-destructive-200 hover:bg-destructive-200 min-w-28 text-center;
   }
 
   .btn-upload {
-    @apply flex min-h-14 w-full items-center justify-center gap-1.5 rounded-md;
+    @apply flex min-h-14 w-full items-center justify-center gap-1.5 rounded-md text-center;
   }
+  
   .btn-primary {
-    @apply w-fit !bg-primary-200 !text-dark-100 hover:!bg-primary-200/80 !rounded-full !font-bold px-5 cursor-pointer min-h-10;
+    @apply w-fit !bg-success-100 !text-white hover:!bg-success-200 !rounded-full !font-bold px-5 cursor-pointer min-h-10 text-center; /* Green primary buttons */
   }
+  
   .btn-secondary {
-    @apply w-fit !bg-dark-200 !text-primary-200 hover:!bg-dark-200/80 !rounded-full !font-bold px-5 cursor-pointer min-h-10;
+    @apply w-fit !bg-dark-200 !text-white hover:!bg-dark-300 !rounded-full !font-bold px-5 cursor-pointer min-h-10 text-center; /* Updated colors */
+  }
+
+  .btn-warning {
+    @apply w-fit !bg-warning-100 !text-dark-100 hover:!bg-warning-200 !rounded-full !font-bold px-5 cursor-pointer min-h-10 text-center; /* Yellow accent buttons */
   }
 
   .btn-upload {
-    @apply bg-dark-200 rounded-full min-h-12 px-5 cursor-pointer border border-input  overflow-hidden;
+    @apply bg-dark-200 rounded-full min-h-12 px-5 cursor-pointer border border-input overflow-hidden text-center;
   }
 
   .card-border {
@@ -190,41 +199,41 @@
   }
 
   .card {
-    @apply dark-gradient rounded-2xl min-h-full;
+    @apply dark-gradient rounded-2xl min-h-full text-center; /* Centered card content */
   }
 
   .form {
-    @apply w-full;
+    @apply w-full text-center; /* Centered forms */
 
     .label {
-      @apply !text-light-100 !font-normal;
+      @apply !text-light-100 !font-bold text-center; /* Bold and centered labels */
     }
 
     .input {
-      @apply !bg-dark-200 !rounded-full !min-h-12 !px-5 placeholder:!text-light-100;
+      @apply !bg-dark-200 !rounded-full !min-h-12 !px-5 placeholder:!text-light-100 text-center font-bold; /* Bold input text */
     }
 
     .btn {
-      @apply !w-full !bg-primary-200 !text-dark-100 hover:!bg-primary-200/80 !rounded-full !min-h-10 !font-bold !px-5 cursor-pointer;
+      @apply !w-full !bg-success-100 !text-white hover:!bg-success-200 !rounded-full !min-h-10 !font-bold !px-5 cursor-pointer text-center; /* Green form buttons */
     }
   }
 
   .call-view {
-    @apply flex sm:flex-row flex-col gap-10 items-center justify-between w-full;
+    @apply flex sm:flex-row flex-col gap-10 items-center justify-between w-full text-center;
 
     h3 {
-      @apply text-center text-primary-100 mt-5;
+      @apply text-center text-white mt-5; /* Updated text color */
     }
 
     .card-interviewer {
-      @apply flex-center flex-col gap-2 p-7 h-[400px] blue-gradient-dark rounded-lg border-2 border-primary-200/50 flex-1 sm:basis-1/2 w-full;
+      @apply flex-center flex-col gap-2 p-7 h-[400px] green-gradient-dark rounded-lg border-2 border-success-100/50 flex-1 sm:basis-1/2 w-full; /* Green gradient */
     }
 
     .avatar {
-      @apply z-10 flex items-center justify-center blue-gradient rounded-full size-[120px] relative;
+      @apply z-10 flex items-center justify-center green-gradient rounded-full size-[120px] relative;
 
       .animate-speak {
-        @apply absolute inline-flex size-5/6 animate-ping rounded-full bg-primary-200 opacity-75;
+        @apply absolute inline-flex size-5/6 animate-ping rounded-full bg-success-100 opacity-75; /* Green ping */
       }
     }
 
@@ -233,7 +242,7 @@
     }
 
     .card-content {
-      @apply flex flex-col gap-2 justify-center items-center p-7 dark-gradient rounded-2xl min-h-full;
+      @apply flex flex-col gap-2 justify-center items-center p-7 dark-gradient rounded-2xl min-h-full text-center;
     }
   }
 
@@ -241,16 +250,16 @@
     @apply border-gradient p-0.5 rounded-2xl w-full;
 
     .transcript {
-      @apply dark-gradient rounded-2xl  min-h-12 px-5 py-3 flex items-center justify-center;
+      @apply dark-gradient rounded-2xl min-h-12 px-5 py-3 flex items-center justify-center;
 
       p {
-        @apply text-lg text-center text-white;
+        @apply text-lg text-center text-white font-bold; /* Bold transcript text */
       }
     }
   }
 
   .section-feedback {
-    @apply flex flex-col gap-8 max-w-5xl mx-auto max-sm:px-4 text-lg leading-7;
+    @apply flex flex-col gap-8 max-w-5xl mx-auto max-sm:px-4 text-lg leading-7 text-center; /* Centered feedback */
 
     .buttons {
       @apply flex w-full justify-evenly gap-4 max-sm:flex-col max-sm:items-center;
@@ -262,34 +271,34 @@
   }
 
   .root-layout {
-    @apply flex mx-auto max-w-7xl flex-col gap-12 my-12 px-16 max-sm:px-4 max-sm:my-8;
+    @apply flex mx-auto max-w-7xl flex-col gap-12 my-12 px-16 max-sm:px-4 max-sm:my-8 text-center; /* Centered layout */
   }
 
   .card-cta {
-    @apply flex flex-row blue-gradient-dark rounded-3xl px-16 py-6 items-center justify-between max-sm:px-4;
+    @apply flex flex-row green-gradient-dark rounded-3xl px-16 py-6 items-center justify-between max-sm:px-4 text-center; /* Green CTA */
   }
 
   .interviews-section {
-    @apply flex flex-wrap gap-4 max-lg:flex-col w-full items-stretch;
+    @apply flex flex-wrap gap-4 max-lg:flex-col w-full items-stretch justify-center; /* Centered interviews */
   }
 
   .interview-text {
-    @apply text-lg text-center text-white;
+    @apply text-lg text-center text-white font-bold; /* Bold interview text */
   }
 
   .progress {
-    @apply h-1.5 text-[5px] font-bold bg-primary-200 rounded-full flex-center;
+    @apply h-1.5 text-[5px] font-bold bg-success-100 rounded-full flex-center; /* Green progress */
   }
 
   .tech-tooltip {
-    @apply absolute bottom-full mb-1 hidden group-hover:flex px-2 py-1 text-xs text-white bg-gray-700 rounded-md shadow-md;
+    @apply absolute bottom-full mb-1 hidden group-hover:flex px-2 py-1 text-xs text-white bg-gray-700 rounded-md shadow-md font-bold; /* Bold tooltip */
   }
 
   .card-interview {
-    @apply dark-gradient rounded-2xl min-h-full flex flex-col p-6 relative overflow-hidden gap-10 justify-between;
+    @apply dark-gradient rounded-2xl min-h-full flex flex-col p-6 relative overflow-hidden gap-10 justify-between text-center; /* Centered cards */
 
     .badge-text {
-      @apply text-sm font-semibold capitalize;
+      @apply text-sm font-bold capitalize; /* Bold badges */
     }
   }
 }
@@ -306,12 +315,16 @@
   @apply bg-[url('/pattern.png')] bg-top bg-no-repeat;
 }
 
-@utility blue-gradient-dark {
-  @apply bg-gradient-to-b from-[#171532] to-[#08090D];
+@utility green-gradient-dark {
+  @apply bg-gradient-to-b from-[#17231b] to-[#08090D]; /* Green dark gradient */
 }
 
-@utility blue-gradient {
-  @apply bg-gradient-to-l from-[#FFFFFF] to-[#CAC5FE];
+@utility green-gradient {
+  @apply bg-gradient-to-l from-[#10b981] to-[#059669]; /* Green gradient */
+}
+
+@utility yellow-gradient {
+  @apply bg-gradient-to-l from-[#f59e0b] to-[#d97706]; /* Yellow gradient */
 }
 
 @utility flex-center {
@@ -330,5 +343,36 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Ensure all text is bold and centered */
+* {
+  font-weight: 800 !important; /* Force bold weight */
+}
+
+/* css */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #10b981;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #10b981;
+  cursor: pointer;
+  border: none;
+}
+
+/* Responsive text centering */
+@media (max-width: 768px) {
+  .text-center-mobile {
+    text-align: center !important;
   }
 }
