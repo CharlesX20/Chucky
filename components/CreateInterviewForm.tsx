@@ -19,6 +19,7 @@ const interviewFormSchema = z.object({
   level: z.enum(["entry", "junior", "mid", "senior", "executive"]),
   type: z.enum(["Behavioral", "Technical", "Mixed", "General"]),
   amount: z.number().min(3).max(20),
+  isPublic: z.boolean(), // NEW: Public/private toggle
 });
 
 type InterviewFormValues = z.infer<typeof interviewFormSchema>;
@@ -35,6 +36,7 @@ const CreateInterviewForm = () => {
       level: "mid",
       type: "Mixed",
       amount: 10,
+      isPublic: false,
     },
   });
 
@@ -186,6 +188,37 @@ const CreateInterviewForm = () => {
                   <span>20 (Comprehensive)</span>
                 </div>
               </div>
+
+              {/* Visibility */}
+              <div className="bg-dark-200/50 rounded-2xl p-6 border border-light-600/20">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="label block text-lg font-semibold mb-2">
+                      Interview Visibility
+                    </label>
+                    <p className="text-light-400 text-sm">
+                      {form.watch("isPublic") 
+                        ? "This interview will be visible to other users for practice"
+                        : "This interview will be private (only visible to you)"
+                      }
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => form.setValue("isPublic", !form.watch("isPublic"))}
+                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-success-100 focus:ring-offset-2 ${
+                      form.watch("isPublic") ? 'bg-success-100' : 'bg-dark-300'
+                    }`}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                        form.watch("isPublic") ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                </div>
+              </div>
+
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 pt-4">

@@ -26,6 +26,8 @@ interface Interview {
   type: string; // Behavioral, Technical, Mixed, General
   finalized: boolean;
   amount: number; // Number of questions
+  isPublic?: boolean; // NEW: Public/private setting
+  createdBy?: string; // NEW: User name for display
 }
 
 interface CreateFeedbackParams {
@@ -39,9 +41,10 @@ interface User {
   name: string;
   email: string;
   id: string;
+  role?: 'user' | 'admin'; // NEW: User roles
 }
 
-// UPDATED: InterviewCardProps for all job types
+// UPDATED: InterviewCardProps for all job types - FIXED VERSION
 interface InterviewCardProps {
   interviewId?: string;
   userId?: string;
@@ -49,6 +52,10 @@ interface InterviewCardProps {
   type: string;
   level?: string; // Added level
   createdAt?: string;
+  isPublic?: boolean; // NEW: Missing this
+  createdBy?: string; // NEW: Missing this
+  showActions?: boolean; // NEW: Missing this
+  isAdmin?: boolean; // NEW: Missing this
   // REMOVED: techstack
 }
 
@@ -97,6 +104,7 @@ interface InterviewFormProps {
   level: string;
   type: string;
   amount: number;
+  isPublic?: boolean; // NEW: Missing this
   // REMOVED: techstack
 }
 
@@ -109,6 +117,7 @@ interface CreateInterviewParams {
   level: string;
   amount: number;
   userid: string;
+  isPublic?: boolean; // NEW: Missing this
 }
 
 interface JobLevel {
@@ -119,4 +128,30 @@ interface JobLevel {
 interface InterviewType {
   value: string;
   label: string;
+}
+
+// NEW: Admin action types
+interface DeleteInterviewParams {
+  interviewId: string;
+  userId: string;
+  isAdmin?: boolean;
+}
+
+// NEW: Update interview visibility
+interface UpdateInterviewVisibilityParams {
+  interviewId: string;
+  userId: string;
+  isPublic: boolean;
+}
+
+// NEW: Get user by ID for admin
+interface GetUserByIdParams {
+  userId: string;
+}
+
+// NEW: Update user role
+interface UpdateUserRoleParams {
+  userId: string;
+  role: 'user' | 'admin';
+  adminUserId: string; // The admin performing the action
 }

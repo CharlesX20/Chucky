@@ -21,10 +21,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log("Request body:", body);
     
-    const { title, description, level, amount } = body;
+    const { title, description, level, amount, type, isPublic = false } = body;
 
     // Validate required fields
-    if (!title || !description || !level || !amount) {
+    if (!title || !description || !level || !amount || !type) {
       console.log("Missing fields:", { title, description, level, amount });
       return Response.json({ success: false, error: "Missing required fields" }, { status: 400 });
     }
@@ -37,10 +37,12 @@ export async function POST(request: NextRequest) {
         Job Title: ${title}
         Job Description: ${description}
         Experience Level: ${level}
+        Interview Type: ${type}
         Number of Questions: ${amount}
         
         IMPORTANT INSTRUCTIONS:
         - Generate questions appropriate for the specific job title and level
+        - For ${type} interviews, focus on ${type.toLowerCase()} questions
         - Include a mix of behavioral, situational, and role-specific questions
         - Questions should be relevant to ANY industry or job field
         - Return ONLY the questions as a JSON array, no additional text
@@ -82,8 +84,11 @@ export async function POST(request: NextRequest) {
       level: level,
       questions: parsedQuestions,
       userId: user.id,
+      createdBy: user.name, // NEW: Store creator name
       finalized: true,
-      type: "Mixed",
+      type: type,
+      isPublic: isPublic, // NEW: Public/private setting
+      amount: amount,
       createdAt: new Date().toISOString(),
     };
 
