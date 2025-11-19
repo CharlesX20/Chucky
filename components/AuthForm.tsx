@@ -19,12 +19,13 @@ import { Button } from "@/components/ui/button";
 
 import { signIn, signUp } from "@/lib/actions/auth.action";
 import FormField from "./FormField";
+import PasswordField from "./PasswordField";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
-    name: type === "sign-up" ? z.string().min(3) : z.string().optional(),
-    email: z.string().email(),
-    password: z.string().min(3),
+    name: type === "sign-up" ? z.string().min(3, "Name must be at least 3 characters") : z.string().optional(),
+    email: z.string().email("Please enter a valid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
   });
 };
 
@@ -64,7 +65,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           return;
         }
 
-        toast.success("Account created successfully. Please sign in.");
+        toast.success("🎉 Account created successfully. Please sign in.");
         router.push("/sign-in");
       } else {
         const { email, password } = data;
@@ -77,7 +78,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
         const idToken = await userCredential.user.getIdToken();
         if (!idToken) {
-          toast.error("Sign in Failed. Please try again.");
+          toast.error("❌ Sign in Failed. Please try again.");
           return;
         }
 
@@ -86,73 +87,131 @@ const AuthForm = ({ type }: { type: FormType }) => {
           idToken,
         });
 
-        toast.success("Signed in successfully.");
+        toast.success("🚀 Signed in successfully.");
         router.push("/");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast.error(`There was an error: ${error}`);
+      
+      // User-friendly error messages
+      if (error.code === 'auth/email-already-in-use') {
+        toast.error("📧 This email is already registered. Please sign in.");
+      } else if (error.code === 'auth/invalid-credential') {
+        toast.error("❌ Invalid email or password. Please try again.");
+      } else if (error.code === 'auth/weak-password') {
+        toast.error("🔒 Password should be at least 6 characters.");
+      } else {
+        toast.error(`💥 There was an error: ${error.message}`);
+      }
     }
   };
 
   const isSignIn = type === "sign-in";
 
   return (
-    <div className="card-border lg:min-w-[566px]">
-      <div className="flex flex-col gap-6 card py-14 px-10 text-center"> {/* Added text-center */}
-        <div className="flex flex-row gap-2 justify-center">
-          <Image src="/logo.svg" alt="logo" height={32} width={38} />
-          <h2 className="text-white">Chucky</h2> {/* Updated text color */}
-        </div>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-dark-100">
+      <div className="card-border lg:min-w-[480px] w-full max-w-md">
+        <div className="flex flex-col gap-6 card py-12 px-8 sm:px-10">
+          {/* Logo & Brand */}
+          <div className="text-center">
+            <div className="flex justify-center mb-4">
+              <div className="flex items-center justify-center bg-success-100 rounded-full w-16 h-16">
+                <Image src="/logo.svg" alt="logo" height={28} width={32} className="filter brightness-0 invert" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2">Chucky InterviewPrep</h2>
+            <p className="text-light-100 text-lg">
+              {isSignIn ? "Welcome back!" : "Create your account"}
+            </p>
+          </div>
 
-        <h3>Practice job interviews with AI</h3>
+          {/* Form Title */}
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-white mb-2">
+              {isSignIn ? "Sign In to Your Account" : "Start Your Interview Journey"}
+            </h3>
+            <p className="text-light-400 text-sm">
+              {isSignIn 
+                ? "Enter your credentials to access your interviews" 
+                : "Fill in your details to create personalized interviews"
+              }
+            </p>
+          </div>
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full space-y-6 mt-4 form"
-          >
-            {!isSignIn && (
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-full space-y-5 mt-2"
+            >
+              {!isSignIn && (
+                <FormField
+                  control={form.control}
+                  name="name"
+                  label="Full Name"
+                  placeholder="Enter your full name"
+                  type="text"
+                />
+              )}
+
               <FormField
                 control={form.control}
-                name="name"
-                label="Name"
-                placeholder="Your Name"
-                type="text"
+                name="email"
+                label="Email Address"
+                placeholder="your.email@example.com"
+                type="email"
               />
-            )}
 
-            <FormField
-              control={form.control}
-              name="email"
-              label="Email"
-              placeholder="Your email address"
-              type="email"
-            />
+              {/* Updated Password Field with Toggle */}
+              <PasswordField
+                control={form.control}
+                name="password"
+                label="Password"
+                placeholder={isSignIn ? "Enter your password" : "Create a strong password"}
+              />
 
-            <FormField
-              control={form.control}
-              name="password"
-              label="Password"
-              placeholder="Enter your password"
-              type="password"
-            />
+              <Button 
+                className="btn w-full mt-6 py-3 text-lg font-semibold" 
+                type="submit"
+              >
+                {isSignIn ? (
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    Sign In
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Create Account
+                  </div>
+                )}
+              </Button>
+            </form>
+          </Form>
 
-            <Button className="btn" type="submit">
-              {isSignIn ? "Sign In" : "Create an Account"}
-            </Button>
-          </form>
-        </Form>
+          {/* Switch Auth Type */}
+          <div className="text-center pt-4 border-t border-light-600/20">
+            <p className="text-light-100">
+              {isSignIn ? "Don't have an account?" : "Already have an account?"}
+              <Link
+                href={!isSignIn ? "/sign-in" : "/sign-up"}
+                className="font-bold text-success-100 hover:text-success-200 ml-2 transition-colors duration-200"
+              >
+                {!isSignIn ? "Sign In" : "Sign Up"}
+              </Link>
+            </p>
+          </div>
 
-        <p className="text-center">
-          {isSignIn ? "No account yet?" : "Have an account already?"}
-          <Link
-            href={!isSignIn ? "/sign-in" : "/sign-up"}
-            className="font-bold text-success-100 ml-1" // Updated link color
-          >
-            {!isSignIn ? "Sign In" : "Sign Up"}
-          </Link>
-        </p>
+          {/* Help Text */}
+          <div className="text-center">
+            <p className="text-xs text-light-400">
+              🔒 Your data is securely encrypted and protected
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

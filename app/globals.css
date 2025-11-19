@@ -203,10 +203,10 @@
   }
 
   .form {
-    @apply w-full text-center; /* Centered forms */
+    @apply w-full; /* Centered forms */
 
     .label {
-      @apply !text-light-100 !font-bold text-center; /* Bold and centered labels */
+      @apply !text-light-100 !font-bold text-left; /* Bold and centered labels */
     }
 
     .input {
@@ -351,7 +351,7 @@
   font-weight: 800 !important; /* Force bold weight */
 }
 
-/* css */
+/* Slider styles */
 .slider::-webkit-slider-thumb {
   appearance: none;
   height: 20px;
@@ -370,9 +370,31 @@
   border: none;
 }
 
+textarea {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+textarea::-webkit-scrollbar {
+  display: none;
+}
+
 /* Responsive text centering */
 @media (max-width: 768px) {
   .text-center-mobile {
     text-align: center !important;
+  }
+  
+  /* Mobile-specific fixes */
+  .card-border {
+    @apply w-full max-w-full;
+  }
+  
+  .form .input {
+    @apply text-left; /* Left-align input text on mobile */
+  }
+  
+  .root-layout {
+    @apply px-4 gap-8;
   }
 }
