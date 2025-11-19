@@ -10,6 +10,12 @@ export async function createFeedback(params: CreateFeedbackParams) {
   const { interviewId, userId, transcript, feedbackId } = params;
 
   try {
+    console.log("=== CREATE FEEDBACK STARTED ===");
+    console.log("Interview ID:", interviewId);
+    console.log("User ID:", userId);
+    console.log("Transcript length:", transcript.length);
+    console.log("First few transcript messages:", transcript.slice(0, 3));
+
     const formattedTranscript = transcript
       .map(
         (sentence: { role: string; content: string }) =>
@@ -17,9 +23,10 @@ export async function createFeedback(params: CreateFeedbackParams) {
       )
       .join("");
 
-    // SIMPLIFIED: Removed the structuredOutputs configuration
+    console.log("Calling Gemini for feedback generation...");
+
     const { object } = await generateObject({
-      model: google("gemini-2.0-flash-001"), // No second argument
+      model: google("gemini-2.0-flash-001"),
       schema: feedbackSchema,
       prompt: `
         You are an AI interviewer analyzing a mock interview for ANY job field. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
@@ -40,6 +47,8 @@ export async function createFeedback(params: CreateFeedbackParams) {
         "You are a professional interviewer analyzing mock interviews for ALL job types. Your task is to evaluate candidates based on universal professional categories",
     });
 
+    console.log("Gemini feedback generated:", object);
+
     const feedback = {
       interviewId: interviewId,
       userId: userId,
@@ -51,19 +60,24 @@ export async function createFeedback(params: CreateFeedbackParams) {
       createdAt: new Date().toISOString(),
     };
 
+    console.log("Feedback object to save:", feedback);
+
     let feedbackRef;
 
     if (feedbackId) {
       feedbackRef = db.collection("feedback").doc(feedbackId);
+      console.log("Updating existing feedback:", feedbackId);
     } else {
       feedbackRef = db.collection("feedback").doc();
+      console.log("Creating new feedback with ID:", feedbackRef.id);
     }
 
     await feedbackRef.set(feedback);
+    console.log("Feedback saved successfully!");
 
     return { success: true, feedbackId: feedbackRef.id };
   } catch (error) {
-    console.error("Error saving feedback:", error);
+    console.error("=== CREATE FEEDBACK ERROR ===", error);
     return { success: false };
   }
 }
