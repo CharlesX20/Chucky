@@ -17,6 +17,32 @@ const fontSans = {
 export const metadata: Metadata = {
   title: "Chucky InterviewPrep",
   description: "An AI-powered platform for preparing for mock interviews.",
+  icons: {
+    icon: [
+      // Use the exact filenames from your download
+      {
+        url: "/favicon.ico",
+        sizes: "32x32",
+      },
+      {
+        url: "/android-chrome-192x192.png", 
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/android-chrome-512x512.png", // Note: 512x512 not 515x512
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    apple: [
+      {
+        url: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
