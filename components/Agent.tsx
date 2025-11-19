@@ -139,10 +139,10 @@ const Agent = ({
         <div className="card-interviewer">
           <div className="avatar">
             <Image
-              src="/ai-avatar.png"
+              src="/ai-logo2.png"
               alt="profile-image"
-              width={65}
-              height={54}
+              width={650}
+              height={540}
               className="object-cover"
             />
             {isSpeaking && <span className="animate-speak" />}
@@ -154,8 +154,8 @@ const Agent = ({
         <div className="card-border">
           <div className="card-content">
             <Image
-              src="/user-avatar.png"
-              alt="profile-image"
+              src="/you.jpeg"
+              alt="your-profile-image"
               width={539}
               height={539}
               className="rounded-full object-cover size-[120px]"

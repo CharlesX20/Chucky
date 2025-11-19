@@ -69,17 +69,17 @@ async function Home() {
 
           <Button asChild className="btn-primary max-sm:w-full">
             <Link href="/interview">
-              {user.role === 'admin' ? "Create Template Interview" : "Start an Interview"}
+              {user.role === 'admin' ? "Create Template Interview" : "Create an Interview"}
             </Link>
           </Button>
         </div>
 
         <Image
-          src="/robot.png"
-          alt="robo-dude"
+          src="/interview-hero-image.jpg"
+          alt="interview-hero-image"
           width={400}
           height={400}
-          className="max-sm:hidden"
+          className="hidden lg:block"
         />
       </section>
 

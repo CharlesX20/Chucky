@@ -23,7 +23,7 @@ const InterviewDetails = async ({ params }: RouteParams) => {
 
   return (
     <>
-      <div className="flex flex-row gap-4 justify-between items-center">
+      <div className="max-sm:hidden flex flex-row gap-4 justify-between items-center">
         <div className="flex flex-row gap-4 items-center max-sm:flex-col">
           <div className="flex flex-row gap-4 items-center">
             {/* REMOVED: Cover image as requested */}

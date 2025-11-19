@@ -29,10 +29,10 @@ const Header = () => {
           <Link href="/" className="flex items-center gap-3 group">
             <div className="flex items-center justify-center bg-success-100 rounded-full w-10 h-10 transition-transform group-hover:scale-105">
               <Image 
-                src="/logo.svg" 
+                src="/ai-logo2.png" 
                 alt="Chucky InterviewPrep Logo" 
-                width={24} 
-                height={24}
+                width={54} 
+                height={54}
                 className="filter brightness-0 invert"
               />
             </div>

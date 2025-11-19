@@ -116,7 +116,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           <div className="text-center">
             <div className="flex justify-center mb-4">
               <div className="flex items-center justify-center bg-success-100 rounded-full w-16 h-16">
-                <Image src="/logo.svg" alt="logo" height={28} width={32} className="filter brightness-0 invert" />
+                <Image src="/ai-logo2.png" alt="logo" height={58} width={58} className="filter brightness-0 invert" />
               </div>
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">Chucky InterviewPrep</h2>

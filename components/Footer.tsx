@@ -17,12 +17,16 @@ const Footer = () => {
           
           {/* Contact Details */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-light-100 text-sm">
-            <div className="flex items-center gap-2 bg-dark-200 px-4 py-2 rounded-full">
+            {/* Phone Link - FIXED */}
+            <Link 
+              href="tel:+16478015413"
+              className="flex items-center gap-2 bg-dark-200 px-4 py-2 rounded-full hover:bg-success-100/10 transition-colors"
+            >
               <svg className="w-4 h-4 text-success-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
               <span className="font-semibold">+1 (647) 801-5413</span>
-            </div>
+            </Link>
             
             <Link 
               href="mailto:charleschime23@gmail.com"
