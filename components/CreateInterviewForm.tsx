@@ -118,7 +118,7 @@ const CreateInterviewForm = () => {
 
               {/* Job Description - TEXTAREA */}
               <div>
-                <label className="label block mb-3 text-lg font-semibold text-light-100">
+                <label className="label block mb-3 text-lg font-semibold text-light-100 text-left">
                   Job Description *
                 </label>
                 <textarea
@@ -140,7 +140,7 @@ const CreateInterviewForm = () => {
               {/* Experience Level & Interview Type */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="label block mb-3 text-lg font-semibold text-light-100">
+                  <label className="label block mb-3 text-lg font-semibold text-light-100 text-left">
                     Experience Level
                   </label>
                   <select
@@ -156,7 +156,7 @@ const CreateInterviewForm = () => {
                 </div>
 
                 <div>
-                  <label className="label block mb-3 text-lg font-semibold text-light-100">
+                  <label className="label block mb-3 text-lg font-semibold text-light-100 text-left">
                     Interview Type
                   </label>
                   <select
@@ -173,7 +173,7 @@ const CreateInterviewForm = () => {
 
               {/* Number of Questions Slider */}
               <div className="bg-dark-200/80 rounded-2xl p-6 border border-light-600/20">
-                <label className="label block mb-4 text-lg font-semibold text-light-100">
+                <label className="label block mb-4 text-lg font-semibold text-light-100 text-left">
                   Number of Questions: <span className="text-success-100">{form.watch("amount")}</span>
                 </label>
                 <input
@@ -193,7 +193,7 @@ const CreateInterviewForm = () => {
               <div className="bg-dark-200/50 rounded-2xl p-6 border border-light-600/20">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="label block text-lg font-semibold mb-2">
+                    <label className="label block text-lg font-semibold mb-2 text-left">
                       Interview Visibility
                     </label>
                     <p className="text-light-400 text-sm">
