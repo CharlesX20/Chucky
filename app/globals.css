@@ -279,7 +279,7 @@
   }
 
   .interviews-section {
-    @apply flex flex-wrap gap-4 max-lg:flex-col w-full items-stretch justify-center; /* Centered interviews */
+    @apply flex flex-wrap gap-4 max-lg:flex-col w-full items-stretch justify-start; /* interviews */
   }
 
   .interview-text {
