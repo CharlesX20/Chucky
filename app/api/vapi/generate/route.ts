@@ -8,11 +8,11 @@ import { getCurrentUser } from "@/lib/actions/auth.action";
 export async function POST(request: NextRequest) {
   try {
     console.log("=== API CALL STARTED ===");
-    
+
     // Get current user from auth
     const user = await getCurrentUser();
     console.log("User:", user);
-    
+
     if (!user) {
       console.log("No user found");
       return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     console.log("Request body:", body);
-    
+
     const { title, description, level, amount, type, isPublic = false } = body;
 
     // Validate required fields
@@ -29,8 +29,16 @@ export async function POST(request: NextRequest) {
       return Response.json({ success: false, error: "Missing required fields" }, { status: 400 });
     }
 
+    // backend description validation
+    if (description.length > 4000) {
+      return Response.json({
+        success: false,
+        error: `Job description too long (${description.length}/4000 characters). Please shorten it.`
+      }, { status: 400 });
+    }
+
     console.log("Calling Gemini...");
-    
+
     const { text: questions } = await generateText({
       model: google("gemini-2.0-flash-001"),
       prompt: `Prepare professional interview questions for ANY job field.
@@ -60,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     // FIX: Clean the response before parsing
     let cleanedQuestions = questions.trim();
-    
+
     // Remove markdown code blocks if present
     if (cleanedQuestions.startsWith('```json')) {
       cleanedQuestions = cleanedQuestions.slice(7); // Remove ```json
@@ -71,9 +79,9 @@ export async function POST(request: NextRequest) {
     if (cleanedQuestions.endsWith('```')) {
       cleanedQuestions = cleanedQuestions.slice(0, -3); // Remove ```
     }
-    
+
     cleanedQuestions = cleanedQuestions.trim();
-    
+
     console.log("Cleaned questions:", cleanedQuestions);
 
     const parsedQuestions = JSON.parse(cleanedQuestions);
@@ -99,13 +107,13 @@ export async function POST(request: NextRequest) {
 
     console.log("=== API CALL SUCCESS ===");
 
-    return Response.json({ 
+    return Response.json({
       success: true
     }, { status: 200 });
   } catch (error) {
     console.error("=== API ERROR ===", error);
-    return Response.json({ 
-      success: false, 
+    return Response.json({
+      success: false,
       error: error instanceof Error ? error.message : "Unknown error"
     }, { status: 500 });
   }
