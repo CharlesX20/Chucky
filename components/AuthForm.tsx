@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { signIn, signUp } from "@/lib/actions/auth.action";
 import FormField from "./FormField";
 import PasswordField from "./PasswordField";
+import GoogleSignInButton from "./GoogleSignInButton";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -92,7 +93,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
       }
     } catch (error: any) {
       console.log(error);
-      
+
       // User-friendly error messages
       if (error.code === 'auth/email-already-in-use') {
         toast.error("📧 This email is already registered. Please sign in.");
@@ -131,8 +132,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
               {isSignIn ? "Sign In to Your Account" : "Start Your Interview Journey"}
             </h3>
             <p className="text-light-400 text-sm">
-              {isSignIn 
-                ? "Enter your credentials to access your interviews" 
+              {isSignIn
+                ? "Enter your credentials to access your interviews"
                 : "Fill in your details to create personalized interviews"
               }
             </p>
@@ -169,8 +170,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 placeholder={isSignIn ? "Enter your password" : "Create a strong password"}
               />
 
-              <Button 
-                className="btn w-full mt-6 py-3 text-lg font-semibold" 
+              <Button
+                className="btn w-full mt-6 py-3 text-lg font-semibold"
                 type="submit"
               >
                 {isSignIn ? (
@@ -189,6 +190,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                   </div>
                 )}
               </Button>
+              <GoogleSignInButton />
             </form>
           </Form>
 

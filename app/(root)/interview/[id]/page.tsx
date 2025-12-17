@@ -13,7 +13,7 @@ const InterviewDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
 
   const user = await getCurrentUser();
-  
+
   // Redirect if user is not authenticated
   if (!user) {
     redirect("/sign-in");
@@ -33,7 +33,9 @@ const InterviewDetails = async ({ params }: RouteParams) => {
         <div className="flex flex-row gap-4 items-center max-sm:flex-col">
           <div className="flex flex-row gap-4 items-center">
             {/* REMOVED: Cover image as requested */}
-            <h3 className="capitalize text-center">{interview.title} Interview</h3>
+            <h3 className="capitalize text-center">
+              {interview.title.length > 20 ? "Your Interview" : `${interview.title} Interview`}
+            </h3>
           </div>
         </div>
 

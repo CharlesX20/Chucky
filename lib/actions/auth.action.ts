@@ -41,6 +41,7 @@ export async function signUp(params: SignUpParams) {
     await db.collection("users").doc(uid).set({
       name,
       email,
+      createdAt: new Date().toISOString(),
       // profileURL,
       // resumeURL,
     });
@@ -71,20 +72,74 @@ export async function signIn(params: SignInParams) {
   const { email, idToken } = params;
 
   try {
-    const userRecord = await auth.getUserByEmail(email);
-    if (!userRecord)
-      return {
-        success: false,
-        message: "User does not exist. Create an account.",
-      };
+    // Verify the ID token (works for both email/password and Google)
+    const decodedToken = await auth.verifyIdToken(idToken);
+    const uid = decodedToken.uid;
 
+    try {
+      // Try to get user from Firebase Auth
+      await auth.getUser(uid);
+      
+      // User exists in Firebase Auth, now check Firestore
+      const firestoreUser = await db.collection("users").doc(uid).get();
+      
+      if (!firestoreUser.exists) {
+        // User exists in Firebase Auth but not in Firestore - create Firestore record
+        // For Google users, use the name from the token if available
+        const userName = decodedToken.name || email.split('@')[0];
+        
+        await db.collection("users").doc(uid).set({
+          name: userName,
+          email: email,
+          createdAt: new Date().toISOString(),
+        });
+      }
+      
+    } catch (error: any) {
+      if (error.code === 'auth/user-not-found') {
+        // For Google users: Create in Firebase Auth
+        const userName = decodedToken.name || email.split('@')[0];
+        
+        await auth.createUser({
+          uid: uid,
+          email: email,
+          displayName: userName,
+          emailVerified: true,
+        });
+        
+        // Create user in Firestore
+        await db.collection("users").doc(uid).set({
+          name: userName,
+          email: email,
+          createdAt: new Date().toISOString(),
+        });
+      } else {
+        throw error;
+      }
+    }
+
+    // Set session cookie
     await setSessionCookie(idToken);
-  } catch (error: any) {
-    console.log("");
 
     return {
+      success: true,
+      message: "Signed in successfully",
+    };
+    
+  } catch (error: any) {
+    console.error("Sign in error:", error);
+    
+    // User-friendly error messages
+    if (error.code === 'auth/invalid-id-token') {
+      return {
+        success: false,
+        message: "Invalid authentication token. Please try again.",
+      };
+    }
+    
+    return {
       success: false,
-      message: "Failed to log into account. Please try again.",
+      message: "Failed to sign in. Please try again.",
     };
   }
 }
